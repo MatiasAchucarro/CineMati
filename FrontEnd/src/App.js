@@ -7,7 +7,7 @@ import Editar from './Components/Editar';
 
 import { ModalCard } from './Components/ModalCard';
 import { Header } from './Components/Header';
-import { Nav } from './Components/Nav';
+
 import { Content } from './Components/Content';
 import { Footer } from './Components/Footer';
 
@@ -33,7 +33,7 @@ function App() {
 
   const searcher = (e) => {
     setSerch(e.target.value)
-    //console.log(e.target)
+    
 
   }
 
@@ -43,6 +43,10 @@ function App() {
     fetchGet()
 
   }, []);
+
+  const noResultsMessage = results.length === 0 && search ? (
+    <div className='nullPelicula'><p>No se encontraron películas con ese nombre</p></div>
+  ) : null;
 
 
   //Post
@@ -160,9 +164,8 @@ function App() {
 
     <div className="App">
 
-      <Header />
-      <Nav setOpenModal={setOpenModal} posts={posts} search={search} searcher={searcher} />
-      <Content pelicula={results} onEditMovie={onEditMovie} handleShowDetail={handleShowDetail} deletePost={deletePost} />
+      <Header setOpenModal={setOpenModal} search={search} searcher={searcher} />
+      <Content pelicula={results} onEditMovie={onEditMovie} handleShowDetail={handleShowDetail} deletePost={deletePost} noResultsMessage ={noResultsMessage} />
       <ModalCard isOpen={isModalOpen} toggle={handleCloseModal} pelicula={modalContent} />
       {openModal && <Agregar closeModal={setOpenModal} addPost={addPost} />}
       {openModalE && < Editar editPut={handleUpdate} closeModal={setOpenModalE} movieEdit={movieEdit} />}

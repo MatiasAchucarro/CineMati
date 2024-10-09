@@ -25,8 +25,9 @@ export const ModalCard = ({ isOpen, toggle, pelicula }) => {
 
             </ModalHeader>
             <ModalBody>
-                <div className="card-body">
-                    <img src={urlImagenSrcM} className="card-img-top" style={{ height: '250px', width: '300px' }} />
+                <div >
+                    <img src={urlImagenSrcM} className='card-img-modal' style={{  width: "50%", height: "200px" }}/>
+             
                 </div>
                 <br />
                 <p>{pelicula.description}</p>

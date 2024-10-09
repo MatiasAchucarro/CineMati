@@ -21,7 +21,7 @@ export default function Pelicula(pelicula) {
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     }
   }, []);
 
@@ -44,8 +44,10 @@ export default function Pelicula(pelicula) {
   };
   return (
 
-    <div className='card' style={{ width: "18rem;" }}>
-      <img src={urlImagenSrc} className="card-img-top" style={{ width: "199px", height: "200px" }}></img>
+    <div className='card' >
+      <div className="card-img-container">
+      <img src={urlImagenSrc} className="card-img-top" style={{  width: "100%", height: "200px" }} alt={pelicula.titles} />
+      </div>
       <div className="card-body">
 
         <h4 className="card-title"> {pelicula.titles}</h4>
@@ -54,9 +56,9 @@ export default function Pelicula(pelicula) {
         </p>
 
 
-        <label class="popup" ref={popupRef}>
+        <label className="popup" ref={popupRef}>
           <input type="checkbox" ref={inputRef} />
-          <div class="burger" tabindex="0">
+          <div className="burger" tabindex="0">
             <span></span>
             <span></span>
             <span></span>

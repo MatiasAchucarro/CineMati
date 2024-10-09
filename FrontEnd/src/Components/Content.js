@@ -1,6 +1,6 @@
 import React from 'react'
 import Pelicula from './Pelicula'
-export const Content = ({ pelicula, handleShowDetail, onEditMovie, deletePost }) => {
+export const Content = ({ pelicula, handleShowDetail, onEditMovie, deletePost, noResultsMessage}) => {
 
   return (
     <section id='content' className='content'>
@@ -14,7 +14,8 @@ export const Content = ({ pelicula, handleShowDetail, onEditMovie, deletePost })
           deletePost={deletePost}
           onEditMovie={() => onEditMovie(pelicula)}
           onShowDetail={() => handleShowDetail(pelicula)}
+        
         />
-      )}</section>
+      )} {noResultsMessage}  </section>
   )
 }

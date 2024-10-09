@@ -29,15 +29,21 @@ body {
   background: linear-gradient(90deg, white 10%, rgb(45, 99, 152) 100%);
   font-style: italic;
   display: flex;
-  justify-content: center;
-
-
+  justify-content: space-between;
+  margin-top: -30px;
+  align-items: center;
+  padding: 0 20px;
 }
+
+.header-left, .header-center, .header-right {
+  display: flex;
+  align-items: center;
+}
+
 
 .logo {
   width: 100px;
   height: 100px;
-  margin-top: -5px
 }
 
 .movie-title {
@@ -45,22 +51,65 @@ body {
   margin-left: 15px;
 }
 
-/*BARRA NAV*/
-.nav {
+
+/*BUSCADOR*/
+.group {
   display: flex;
   justify-content: center;
-  background: linear-gradient(90deg, white 10%, rgb(45, 99, 152) 100%);
-
+  line-height: 28px;
+  align-items: center;
+  position: relative;
+  max-width: 300px;
+  margin-left: 40px;
 }
 
-.agregar-pelicula {
+.input {
+  width: 100%;
+  height: 40px;
+  line-height: 28px;
+  padding: 0 1rem;
+  padding-left: 2.5rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  outline: none;
+  background-color: #f3f3f4;
+  color: #0d0c22;
+  transition: .3s ease;
+}
+
+.input::placeholder {
+  color: #9e9ea7;
+}
+
+.input:focus,
+input:hover {
+  outline: none;
+  border-color: rgba(27, 56, 184, 0.4);
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(37, 156, 211, 0.1);
+}
+
+.icone {
+  position: absolute;
+  left: 1rem;
+  fill: #9e9ea7;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* AGREGAR PELICULAS */
+.header-center {
+  display: flex;
+  justify-content: flex-end;
+  width: 200px;
+}
+.NullPeli{
   display: flex;
   justify-content: center;
-  margin: 5px;
-
+  align-items: center;
 }
 
-/*AgregarImagen */
+/*AgregarImagen modal */
 
 .custum-file-upload {
   height: 140px;
@@ -114,52 +163,18 @@ body {
 
 
 
-/*BUSCADOR*/
-.group {
-  display: flex;
-  justify-content: center;
-  line-height: 28px;
-  align-items: center;
-  position: relative;
-  max-width: 300px;
-  margin-left: 40px;
-}
-
-.input {
-  width: 100%;
-  height: 40px;
-  line-height: 28px;
-  padding: 0 1rem;
-  padding-left: 2.5rem;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  outline: none;
-  background-color: #f3f3f4;
-  color: #0d0c22;
-  transition: .3s ease;
-}
-
-.input::placeholder {
-  color: #9e9ea7;
-}
-
-.input:focus,
-input:hover {
-  outline: none;
-  border-color: rgba(27, 56, 184, 0.4);
-  background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(37, 156, 211, 0.1);
-}
-
-.icone {
+.nullPelicula{
+  font-size: 36px; 
+  font-weight: bold;
+  color: #2a2abf; 
+  text-align: center;
   position: absolute;
-  left: 1rem;
-  fill: #9e9ea7;
-  width: 1rem;
-  height: 1rem;
+  top: 40%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  width: 100%; 
+  z-index: 999;
 }
-
-
 
 /*CARTA PELICULA*/
 .content {
@@ -174,19 +189,54 @@ input:hover {
 .card {
 
   background: rgb(215, 214, 214);
-  max-width: 200px;
-  max-height: 450px;
-  box-shadow: 0px 0px 6px #ddd;
-  margin: 20px;
-}
-
-.card-img-top {
-  width: 170px;
+  width: 300px;
   height: 200px;
+  box-shadow: 0px 0px 6px #ddd;
+  margin: 12px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+.card-img-container {
+  overflow: hidden;
+  width: 100%;
+  height: 200px;
+}
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
 }
 
 .text-secondary {
   font-size: 15px;
+}
+.card:hover .card-img-top {
+  transform: scale(1.2);
+}
+.card-body {
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease;
+}
+.card:hover .card-body {
+  opacity: 1;
+}
+.card-title {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.card-text {
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 /*VER MAS*/
@@ -196,8 +246,8 @@ input:hover {
   --burger-line-width: 10px;
   --burger-line-height: 2px;
   --burger-offset: 12px;
-  --burger-bg: rgba(0, 0, 0, .15);
-  --burger-color: #333;
+  --burger-bg: rgba(84, 84, 84, 0.15);
+  --burger-color: #fafafa;
   --burger-line-border-radius: 0.1875em;
   --burger-diameter: 32px;
   --burger-btn-border-radius: calc(var(--burger-diameter) / 2);
@@ -477,6 +527,11 @@ input:hover {
 .plusButton:focus-visible>.plusIcon {
   fill: black;
   transform: rotate(180deg);
+}
+/*Imagen del modal ver mas*/
+.card-img-modal{
+  width: 100%;
+  height: auto;
 }
 
 /*FOOTER*/
