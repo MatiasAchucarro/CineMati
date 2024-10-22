@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiCine.Context;
 
@@ -10,9 +11,11 @@ using WebApiCine.Context;
 namespace WebApiCine.Migrations
 {
     [DbContext(typeof(PeliculasContext))]
-    partial class PeliculasContextModelSnapshot : ModelSnapshot
+    [Migration("20241022230147_AddToUser")]
+    partial class AddToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

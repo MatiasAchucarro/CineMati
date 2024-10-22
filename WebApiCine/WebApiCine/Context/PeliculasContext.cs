@@ -10,6 +10,7 @@ namespace WebApiCine.Context
     : base(options)
         {
         }
+        public DbSet<User> User { get; set; }
         public DbSet<Pelicula> Pelicula { get; set; }
         public DbSet<Imagen> Imagen { get; set; }
 
@@ -17,7 +18,8 @@ namespace WebApiCine.Context
         {
             modelBuilder.Entity<Pelicula>()
               .HasOne(p => p.Imagen);
-              
+
+          
         }
     }
 }

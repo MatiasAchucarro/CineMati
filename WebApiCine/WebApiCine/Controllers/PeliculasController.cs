@@ -23,8 +23,10 @@ namespace WebApiCine.Controllers
             _context = context;
         }
 
-        // GET: api/Peliculas
-        [HttpGet]
+        
+
+    // GET: api/Peliculas
+    [HttpGet]
         public async Task<ActionResult<IEnumerable<Pelicula>>> GetPeliculas()
         {
             return await _context.Pelicula.Include(x => x.Imagen).ToListAsync();
@@ -44,13 +46,15 @@ namespace WebApiCine.Controllers
             return peliculas;
         }
 
-        
 
-       
+ 
 
-// POST: api/Peliculas
-// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-[HttpPost]
+
+
+
+    // POST: api/Peliculas
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
         public  ActionResult<Pelicula>  CreatePelicula(PeliculaInput peliculaDto)
         {
             if (peliculaDto.Imagen == null || peliculaDto.Imagen.Value == null)
@@ -191,14 +195,56 @@ namespace WebApiCine.Controllers
 
         private bool ValidateImageContent(byte[] imageBytes)
         {
-            // Implementar la lógica de validación de la imagen real aquí
+           
             return true;
         }
+
+        // POST: api/Users
+        [HttpPost("register")]
+        public async Task<ActionResult<User>> RegisterUser([FromBody] UserInput userDto)
+        {
+            if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.PasswordHash) || string.IsNullOrEmpty(userDto.Name) || string.IsNullOrEmpty(userDto.LestName))
+            {
+                return BadRequest("Username and password are required.");
+            }
+
+            // Crear un hash de contraseña para almacenar
+            var hashedPassword = HashPassword(userDto.PasswordHash); 
+
+            var user = new User
+            {
+                Name = userDto.Name,
+                LestName = userDto.LestName,
+                Email = userDto.Email,
+                PasswordHash = hashedPassword
+            };
+
+            _context.User.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
+        // GET: api/Users
+        [HttpGet("users")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await _context.User.ToListAsync();
+        }
+
+        private string HashPassword(string password)
+        {
+            
+            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+        }
+
     }
-
-
-
 }
+
+
+
+
+
 
 
 
