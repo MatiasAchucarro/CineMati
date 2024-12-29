@@ -1,18 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+﻿using WebApiCine.Context;
+using WebApiCine.Controllers.Molds;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using WebApiCine.Context;
-using WebApiCine.Controllers.Molds;
+using Microsoft.AspNetCore.Authorization;
 using WebApiCine.Dto;
+
 
 
 namespace WebApiCine.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PeliculasController : ControllerBase
     {
@@ -181,12 +180,12 @@ namespace WebApiCine.Controllers
 
                 return Ok(existingPelicula);
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 // Registrar la excepción (ex) aquí si se configura el registro
                 return StatusCode(500, "Se produjo un error de base de datos al actualizar la película y la imagen.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Registrar la excepción (ex) aquí si se configura el registro
                 return StatusCode(500, "Se produjo un error inesperado.");
@@ -197,45 +196,6 @@ namespace WebApiCine.Controllers
         {
            
             return true;
-        }
-
-        // POST: api/Users
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> RegisterUser([FromBody] UserInput userDto)
-        {
-            if (string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.PasswordHash) || string.IsNullOrEmpty(userDto.Name) || string.IsNullOrEmpty(userDto.LestName))
-            {
-                return BadRequest("Username and password are required.");
-            }
-
-            // Crear un hash de contraseña para almacenar
-            var hashedPassword = HashPassword(userDto.PasswordHash); 
-
-            var user = new User
-            {
-                Name = userDto.Name,
-                LestName = userDto.LestName,
-                Email = userDto.Email,
-                PasswordHash = hashedPassword
-            };
-
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
-        }
-
-        // GET: api/Users
-        [HttpGet("users")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            return await _context.User.ToListAsync();
-        }
-
-        private string HashPassword(string password)
-        {
-            
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
         }
 
     }

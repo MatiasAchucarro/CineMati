@@ -19,7 +19,9 @@ namespace WebApiCine.Context
             modelBuilder.Entity<Pelicula>()
               .HasOne(p => p.Imagen);
 
-          
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.URLFotoPerfil);
+
         }
     }
 }

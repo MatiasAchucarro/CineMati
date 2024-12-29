@@ -2,7 +2,7 @@
 
 namespace WebApiCine.Dto
 {
-    public record UserInput(string Email, string PasswordHash, string Name, string LestName);
+    public record UserInput(string Email, string PasswordHash, string Name, string LestName, string NameUser, ImagenInput URLFotoPerfil);
     }
 
 
