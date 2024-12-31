@@ -21,6 +21,29 @@ namespace WebApiCine.Controllers
             _tools = tools;
         }
 
+
+        [HttpGet]
+        [Route("GetUsuario/{id}")]
+        public async Task<IActionResult> GetUsuario(int id)
+        {
+            var usuario = await _dbPruenbaContext.User
+                .Where(u => u.IdUser == id)
+                .Select(u => new
+                {
+                    u.IdUser,
+                    u.Name,
+                    u.LestName,
+                    u.NameUser,
+                    u.Email
+                })
+                .FirstOrDefaultAsync();
+
+            if (usuario == null)
+                return StatusCode(StatusCodes.Status404NotFound, new { isSuccess = false, message = "Usuario no encontrado" });
+
+            return StatusCode(StatusCodes.Status200OK, new { isSuccess = true, usuario });
+        }
+
         [HttpPost]
         [Route("Registrarse")]
         public async Task<IActionResult>Registrarse(UserInput objeto)
