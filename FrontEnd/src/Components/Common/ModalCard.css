@@ -1,0 +1,12 @@
+/*Imagen del modal ver mas*/
+.card-img-modal{
+    width: 100%;
+    height: auto;
+  }
+  .titleH{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+  }
+

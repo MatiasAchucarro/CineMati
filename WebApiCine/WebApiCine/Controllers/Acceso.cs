@@ -27,10 +27,10 @@ namespace WebApiCine.Controllers
         public async Task<IActionResult> GetUsuario(int id)
         {
             var usuario = await _dbPruenbaContext.User
-                .Where(u => u.IdUser == id)
+                .Where(u => u.Id == id)
                 .Select(u => new
                 {
-                    u.IdUser,
+                    u.Id,
                     u.Name,
                     u.LestName,
                     u.NameUser,
@@ -48,6 +48,14 @@ namespace WebApiCine.Controllers
         [Route("Registrarse")]
         public async Task<IActionResult>Registrarse(UserInput objeto)
         {
+            var usuarioExistente = await _dbPruenbaContext.User
+        .AnyAsync(u => u.Email == objeto.Email || u.NameUser == objeto.NameUser);
+
+            if (usuarioExistente)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest,
+                    new { isSuccess = false, message = "El email o nombre de usuario ya está registrado" });
+            }
             var modeloUsuario = new User
             {
                 Name =  objeto.Name,
@@ -58,20 +66,20 @@ namespace WebApiCine.Controllers
             };
             await _dbPruenbaContext.User.AddAsync(modeloUsuario);
             await _dbPruenbaContext.SaveChangesAsync();
-            if (modeloUsuario.IdUser != 0) 
+            if (modeloUsuario.Id != 0)
                 return StatusCode(StatusCodes.Status200OK, new { isSuccess = true });
             else
-                return StatusCode(StatusCodes.Status200OK, new { isSuccess = true });
+                return StatusCode(StatusCodes.Status400BadRequest, new { isSuccess = false, message = "Error al registrar usuario" });
         }
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult>Login(LoginDTO objeto) 
         {
             var usuarioEncontrado = await _dbPruenbaContext.User
-                .Where(u=>
-                u.Email == objeto.Email || 
-                u.NameUser == objeto.NameUser &&
-                u.PasswordHash == _tools.encriptarSHA256(objeto.PasswordHash)).FirstOrDefaultAsync();
+                .Where(u => (
+                      u.Email == objeto.Email ||
+                      u.NameUser == objeto.NameUser) &&
+                      u.PasswordHash == _tools.encriptarSHA256(objeto.PasswordHash)).FirstOrDefaultAsync();
             if (usuarioEncontrado == null)
                 return StatusCode(StatusCodes.Status200OK, new { isSuccess = false, token = "" });
             return StatusCode(StatusCodes.Status200OK, new { isSuccess = true, token = _tools.generarJWT(usuarioEncontrado)});

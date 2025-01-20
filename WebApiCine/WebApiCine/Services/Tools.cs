@@ -35,7 +35,7 @@ namespace WebApiCine.Services
         {
             var userClaims = new[]
             {
-              new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+              new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
               new Claim(ClaimTypes.Email, user.Email),
               new Claim(ClaimTypes.Name, user.Name.ToString()),
               new Claim(ClaimTypes.Surname, user.LestName.ToString()),

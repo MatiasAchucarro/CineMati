@@ -2,7 +2,7 @@ import { faEdit, faTrashAlt, faAdd } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useRef } from "react";
-
+import './Pelicula.css'
 
 
 
@@ -10,6 +10,7 @@ export default function Pelicula(pelicula) {
 
   const popupRef = useRef(null);
   const inputRef = useRef(null);
+
 
   const handleClickOutside = (e) => {
 
@@ -25,8 +26,14 @@ export default function Pelicula(pelicula) {
     }
   }, []);
 
+  if (!pelicula?.id || !pelicula?.titles) {
+    return <div>Datos de película no válidos</div>;
+  }
+
+
   const convertirDatosaImagen = (pelicula) => {
-    const { extension, value } = pelicula.imagen;
+    if (!pelicula?.imagen) return ""; 
+    const { extension, value } = pelicula?.imagen;
     const urlImagenBase64 = `data:image/${extension};base64,${value}`;
     return urlImagenBase64;
 
@@ -46,7 +53,7 @@ export default function Pelicula(pelicula) {
 
     <div className='card' >
       <div className="card-img-container">
-      <img src={urlImagenSrc} className="card-img-top" style={{  width: "100%", height: "200px" }} alt={pelicula.titles} />
+      <img src={urlImagenSrc} className="card-img-top"  alt={pelicula.titles} />
       </div>
       <div className="card-body">
 
@@ -57,7 +64,7 @@ export default function Pelicula(pelicula) {
 
 
         <label className="popup" ref={popupRef}>
-          <input type="checkbox" ref={inputRef} />
+         <input type="checkbox" ref={inputRef} />
           <div className="burger" tabindex="0">
             <span></span>
             <span></span>

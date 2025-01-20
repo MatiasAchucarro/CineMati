@@ -90,7 +90,7 @@ namespace WebApiCine.Controllers
 
 
 
-        // DELETE: api/Peliculas/5
+        // DELETE: api/Peliculas/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePeliculas(int id)
         {

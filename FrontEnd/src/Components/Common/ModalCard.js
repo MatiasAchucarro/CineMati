@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './ModalCard.css'
 
 export const ModalCard = ({ isOpen, toggle, pelicula }) => {
     const convertirDatosaImagen = (pelicula) => {
@@ -21,12 +22,12 @@ export const ModalCard = ({ isOpen, toggle, pelicula }) => {
 
                 <Button className='btn btn-danger' style={{ float: 'right' }} onClick={toggle}>x</Button>
                 <br />
-                <h1 className='TitleH'>{pelicula.titles}</h1>
+                <h1 className='titleH'>{pelicula.titles}</h1>
 
             </ModalHeader>
             <ModalBody>
                 <div >
-                    <img src={urlImagenSrcM} className='card-img-modal' style={{  width: "50%", height: "200px" }}/>
+                    <img src={urlImagenSrcM} className='card-img-modal' />
              
                 </div>
                 <br />

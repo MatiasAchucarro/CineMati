@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-export default function EditPut({ closeModal, editPut, movieEdit }) {
+import RestProvider from '../../Rest/RestProvider.ts';
+import './Editar.css'
+const rest = new RestProvider();
+export default function EditPut({ closeModal, setPosts, movieEdit }) {
 
     const [titles, setTitles] = useState(movieEdit.titles);
     const [description, setDescription] = useState(movieEdit.description);
@@ -70,7 +71,18 @@ export default function EditPut({ closeModal, editPut, movieEdit }) {
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
         } else {
-            editPut(movieEdit.id, titles, description, imagen);
+            rest.editMovie(movieEdit.id, titles, description, imagen)
+
+            setPosts(prevPosts => {
+                const newPosts = [...prevPosts];
+                const index = newPosts.findIndex(post => post.id === movieEdit.id);
+                if (index !== -1) {
+                    newPosts[index].titles = titles;
+                    newPosts[index].description = description;
+                    newPosts[index].imagen = imagen;
+                }
+                return newPosts;
+            });
             setTitles('');
             setDescription('');
             setImagen();
@@ -95,7 +107,7 @@ export default function EditPut({ closeModal, editPut, movieEdit }) {
                     <div className='form-group'>
 
                         <label className="custum-file-upload" for="file">
-                            <div className="icon">
+                            <div className="icon-editar">
                                 {!imagePreview ? (<img src={urlImagenSrc} style={{ height: '140px', width: '200px' }} />
                                 ) : (
                                     <img src={imagePreview} alt="Preview" style={{ height: '140px', width: '200px' }} />
@@ -108,7 +120,7 @@ export default function EditPut({ closeModal, editPut, movieEdit }) {
                                 onChange={handleImageUpload} />
                         </label>
                         <br />
-                        <label className='titles'>Nombre de la Pelicula</label>
+                        <label className='titles-editar'>Nombre de la Pelicula</label>
                         <input
                             className='form-control'
                             type='text'
@@ -118,7 +130,7 @@ export default function EditPut({ closeModal, editPut, movieEdit }) {
                         />
                         {errors.titles && <span style={{ color: 'red' }}>{errors.titles}</span>}
                         <br />
-                        <label className='description'>Descripcion de la Pelicula</label>
+                        <label className='description-editar'>Descripcion de la Pelicula</label>
                         <textarea
                             className='form-control'
                             type='text'

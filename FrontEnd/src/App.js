@@ -2,14 +2,16 @@
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import Agregar from './Components/Agregar';
-import Editar from './Components/Editar';
+import Agregar from './Components/Movies/Agregar.js';
+import Editar from './Components/Movies/Editar.js';
+import { ModalCard } from './Components/Common/ModalCard.js';
+import { Header } from './Components/Layouts/Header.js';
+import { Content } from './Components/Layouts/Content.js';
+import { Footer } from './Components/Layouts/Footer.js';
+import RestProvider from './Rest/RestProvider.ts';
+import toast, { Toaster } from 'react-hot-toast';
 
-import { ModalCard } from './Components/ModalCard';
-import { Header } from './Components/Header';
-
-import { Content } from './Components/Content';
-import { Footer } from './Components/Footer';
+const rest = new RestProvider();
 
 function App() {
 
@@ -23,125 +25,45 @@ function App() {
 
 
 
+  useEffect(() => {
+    toast.success("Bienvenido/a")
+    rest.getMovies()
+      .then((data) => setPosts(data || []))
+  }, []);
 
-  //Get
-  const fetchGet = () => {
-    fetch('https://localhost:44310/api/Peliculas')
-      .then((response) => response.json())
-      .then((data) => setPosts(data))
-  }
+
 
   const searcher = (e) => {
     setSerch(e.target.value)
-    
-
   }
-
   const results = !search ? posts : posts.filter((pelicula) => pelicula.titles.toLowerCase().includes(search.toLocaleLowerCase()))
-  console.log(results)
-  useEffect(() => {
-    fetchGet()
 
-  }, []);
 
   const noResultsMessage = results.length === 0 && search ? (
-    <div className='nullPelicula'><p>No se encontraron películas con ese nombre</p></div>
+    <div className='nullPelicula'>
+      <p>¡Ups! No encontramos películas con "{search}"</p>
+      </div>
   ) : null;
 
 
-  //Post
-  const addPost = (titles, description, imagen) => {
 
-    fetch('https://localhost:44310/api/Peliculas', {
+  const deletePost = (id) => {
 
-      method: 'POST',
-      body: JSON.stringify({
-        Titles: titles,
-        Description: description,
-        Imagen: imagen
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'access-control-allow-origin': '*'
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setPosts((prevPosts) =>
-          [data, ...prevPosts])
-      })
+    const userConfirmed = window.confirm("¿Estás seguro de que deseas borrar esto?");
+    if (userConfirmed) {
+      rest.deletePost(id)
+
+      setPosts(
+        posts.filter((Peliculas) => {
+          return Peliculas.id !== id;
+        })
+      );
+
+
+    }
 
   }
 
-
-
-
-  //PUT
-  const handleUpdate = (id, titles, description, imagen) => {
-    fetch(`https://localhost:44310/api/Peliculas/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: id,
-        titles: titles,
-        description: description,
-        imagen: imagen
-      }),
-    })
-      .then(response => {
-        if (response.ok) {
-          setPosts(prevPosts => {
-            const newPosts = [...prevPosts];
-            const index = newPosts.findIndex(post => post.id === id);
-            if (index !== -1) {
-              newPosts[index].titles = titles;
-              newPosts[index].description = description;
-              newPosts[index].imagen = imagen;
-            }
-            return newPosts;
-          });
-        }
-        else {
-          throw new Error('Hubo un error al actualizar los datos.');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  };
-
-
-
-
-
-
-  //DELETE
-  const deletePost = (id) => {
-    const userConfirmed = window.confirm("¿Estás seguro de que deseas borrar esto?");
-    if (userConfirmed) {
-      fetch(`https://localhost:44310/api/Peliculas/${id}`, {
-        method: 'DELETE'
-      })
-
-     .then((response) => {
-          if (response.status === 200) {
-            setPosts(
-              posts.filter((Peliculas) => {
-                return Peliculas.id !== id;
-              })
-            );
-            console.log("Elemento borrado");
-          }
-        })
-        .catch(error => {
-          console.error("Error al borrar el elemento:", error);
-        });
-    } else {
-      console.log("Cancelado por el usuario");
-    }
-  };
 
   const onEditMovie = (pelicula) => {
     setOpenModalE(true);
@@ -159,20 +81,21 @@ function App() {
   };
 
 
-
   return (
 
-    <div className="App">
 
+
+
+    <div className="App-inicio">
+      <Toaster />
       <Header setOpenModal={setOpenModal} search={search} searcher={searcher} />
-      <Content pelicula={results} onEditMovie={onEditMovie} handleShowDetail={handleShowDetail} deletePost={deletePost} noResultsMessage ={noResultsMessage} />
+      <Content pelicula={results} deletePost={deletePost} onEditMovie={onEditMovie} handleShowDetail={handleShowDetail} noResultsMessage={noResultsMessage} />
       <ModalCard isOpen={isModalOpen} toggle={handleCloseModal} pelicula={modalContent} />
-      {openModal && <Agregar closeModal={setOpenModal} addPost={addPost} />}
-      {openModalE && < Editar editPut={handleUpdate} closeModal={setOpenModalE} movieEdit={movieEdit} />}
+      {openModal && <Agregar closeModal={setOpenModal} setPosts={setPosts} />}
+      {openModalE && < Editar setPosts={setPosts} closeModal={setOpenModalE} movieEdit={movieEdit} />}
       <Footer />
 
     </div>
-
 
 
 

@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useForm } from 'react-hook-form';
-import { AgregarImagen } from '../assets/AgregarImagen';
+import { AgregarImagen } from '../Assets/AgregarImagen.jsx';
+import RestProvider from '../../Rest/RestProvider.ts';
 
 
-
-export default function AddPost({ closeModal, addPost }) {
+const rest = new RestProvider();
+export default function AddPost({ closeModal, setPosts }) {
 
     const [titles, setTitles] = useState('');
     const [description, setDescription] = useState('');
     const [imagen, setImagen] = useState();
     const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
+
+
 
     const fileToBase64 = (imagen, onLoadendedCallback) => {
         const reader = new FileReader();
@@ -60,7 +62,11 @@ export default function AddPost({ closeModal, addPost }) {
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
         } else {
-            addPost(titles, description, imagen);
+            rest.addMovie(titles, description, imagen)
+            .then((data) => {
+                setPosts((prevPosts) =>
+                  [data, ...prevPosts])
+              })
             setTitles('');
             setDescription('');
             setImagen();
@@ -78,7 +84,7 @@ export default function AddPost({ closeModal, addPost }) {
                     <h1> Añadir Pelicula</h1>
                 </ModalHeader>
                 <ModalBody>
-                    <form className='entradas' onSubmit={handleSubmit}>
+                    <form className='entradas-Agregar' onSubmit={handleSubmit}>
                         <div className='form-group'>
 
                             <label className="custum-file-upload" for="file">
@@ -89,7 +95,7 @@ export default function AddPost({ closeModal, addPost }) {
                                     )}
                                 </div>
                                 {!imagePreview && (
-                                    <div className="text">
+                                    <div className="text-agregar">
                                         <span>Subir Imagen</span>
                                     </div>
                                 )}
@@ -103,7 +109,7 @@ export default function AddPost({ closeModal, addPost }) {
                             {errors.imagen && <span style={{ color: 'red' }}>{errors.imagen}</span>}
 
                             <br />
-                            <label className='titles'>Nombre de la Pelicula</label>
+                            <label className='titles-agregar'>Nombre de la Pelicula</label>
                             <input
                                 className='form-control'
                                 type='text' name='titles'
@@ -112,7 +118,7 @@ export default function AddPost({ closeModal, addPost }) {
                             />
                             {errors.titles && <span style={{ color: 'red' }}>{errors.titles}</span>}
                             <br />
-                            <label className='description'>Descripcion de la Pelicula</label>
+                            <label className='description-agregar'>Descripcion de la Pelicula</label>
                             <textarea
                                 className='form-control'
                                 type='text'
