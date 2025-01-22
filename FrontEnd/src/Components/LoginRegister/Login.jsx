@@ -6,7 +6,7 @@ import RestProvider from "../../Rest/RestProvider.ts";
 import toast from "react-hot-toast";
 
 const rest = new RestProvider();
-export const Login = () => {
+export const Login = ({setUser}) => {
   const [formData, setFormData] = useState({
     NameUser: "",
     PasswordHash: "",
@@ -21,7 +21,11 @@ export const Login = () => {
         const response = await rest.login(NameUser, PasswordHash);
         if (response.isSuccess) {
           localStorage.setItem("authToken", response.token);
-          navigate("/pelicula", { replace: true, state: { reload: true } });
+          setUser({
+            username: NameUser,
+            isAuthenticated: true
+          });
+          navigate("/pelicula", { replace: true});
         } else {
           toast.error("Usuario o contraseña incorrectos");
         }
@@ -43,50 +47,50 @@ export const Login = () => {
 
   return (
     <div className="body-login-register">
-    <div className="wrapper-login">
-      <div className="form-box login">
-        <form onSubmit={handleSubmit}>
-          <h1>Login</h1>
-          <div className="input-box">
-            <input
-              type="text"
-              placeholder="Usuario"
-              name="NameUser"
-              value={formData.NameUser}
-              onChange={handleInputChange}
-              required
-            />
+      <div className="wrapper-login">
+        <div className="form-box login">
+          <form onSubmit={handleSubmit}>
+            <h1>Login</h1>
+            <div className="input-box">
+              <input
+                type="text"
+                placeholder="Usuario"
+                name="NameUser"
+                value={formData.NameUser}
+                onChange={handleInputChange}
+                required
+              />
 
-            <FaUser className="icon" />
-          </div>
-          <div className="input-box">
-            <input
-              type="password"
-              placeholder="Contraseña"
-              name="PasswordHash"
-              value={formData.PasswordHash}
-              onChange={handleInputChange}
-              required
-            />
-            <FaLock className="icon" />
-          </div>
+              <FaUser className="icon" />
+            </div>
+            <div className="input-box">
+              <input
+                type="password"
+                placeholder="Contraseña"
+                name="PasswordHash"
+                value={formData.PasswordHash}
+                onChange={handleInputChange}
+                required
+              />
+              <FaLock className="icon" />
+            </div>
 
-          <div className="remember-forgot">
-            <label>
-              <input type="checkbox" />
-              Recordar Usuario
-            </label>
-            <a href="#">¿Olvidate la contraseña?</a>
-          </div>
-          <button type="submit"> Login</button>
-          <div className="register-link">
-            <p>
-              ¿No tenes usuario?<Link to="/register"> Registrate</Link>
-            </p>
-          </div>
-        </form>
+            <div className="remember-forgot">
+              <label>
+                <input type="checkbox" />
+                Recordar Usuario
+              </label>
+              <a href="#">¿Olvidate la contraseña?</a>
+            </div>
+            <button type="submit"> Login</button>
+            <div className="register-link">
+              <p>
+                ¿No tenes usuario?<Link to="/register"> Registrate</Link>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

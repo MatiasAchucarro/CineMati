@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AgregarImagen } from '../Assets/AgregarImagen.jsx';
 import RestProvider from '../../Rest/RestProvider.ts';
-
+import { Subir } from '../Assets/Subir.jsx';
+import './Agregar.css';
 
 const rest = new RestProvider();
 export default function AddPost({ closeModal, setPosts }) {
@@ -87,18 +87,14 @@ export default function AddPost({ closeModal, setPosts }) {
                     <form className='entradas-Agregar' onSubmit={handleSubmit}>
                         <div className='form-group'>
 
-                            <label className="custum-file-upload" for="file">
-                                <div className="icon">
-                                    {!imagePreview ? (<AgregarImagen />
+                            <label className="custum-file-upload-add" for="file">
+                                <div className="icon-subir-imagen">
+                                    {!imagePreview ? (<Subir/>
                                     ) : (
-                                        <img src={imagePreview} alt="Preview" />
+                                        <img src={imagePreview} alt="Preview" style={{ height: '140px', width: '200px' }}/>
                                     )}
                                 </div>
-                                {!imagePreview && (
-                                    <div className="text-agregar">
-                                        <span>Subir Imagen</span>
-                                    </div>
-                                )}
+                                {!imagePreview}
                                 <input
                                     type="file"
                                     id="file"
